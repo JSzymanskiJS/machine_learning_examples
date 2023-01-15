@@ -12,7 +12,7 @@ from collections import Counter
 
 # load in the data
 # https://www.kaggle.com/grouplens/movielens-20m-dataset
-df = pd.read_csv('../large_files/movielens-20m-dataset/edited_rating.csv')
+df = pd.read_csv('large_files/movielens-20m-dataset/edited_rating.csv')
 print("original dataframe size:", len(df))
 
 N = df.userId.max() + 1 # number of users
@@ -22,8 +22,8 @@ user_ids_count = Counter(df.userId)
 movie_ids_count = Counter(df.movie_idx)
 
 # number of users and movies we would like to keep
-n = 10000
-m = 2000
+n = 6000
+m = 1200
 
 user_ids = [u for u, c in user_ids_count.most_common(n)]
 movie_ids = [m for m, c in movie_ids_count.most_common(m)]
@@ -55,4 +55,4 @@ print("max user id:", df_small.userId.max())
 print("max movie id:", df_small.movie_idx.max())
 
 print("small dataframe size:", len(df_small))
-df_small.to_csv('../large_files/movielens-20m-dataset/small_rating.csv', index=False)
+df_small.to_csv('large_files/movielens-20m-dataset/very_small_rating.csv', index=False)

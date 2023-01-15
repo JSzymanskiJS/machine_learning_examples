@@ -12,26 +12,27 @@ import matplotlib.pyplot as plt
 from sklearn.utils import shuffle
 from datetime import datetime
 from sortedcontainers import SortedList
+from tqdm.auto import tqdm
 
 # load in the data
 import os
-if not os.path.exists('user2movie.json') or \
-   not os.path.exists('movie2user.json') or \
-   not os.path.exists('usermovie2rating.json') or \
-   not os.path.exists('usermovie2rating_test.json'):
+if not os.path.exists('recommenders/user2movie.json') or \
+   not os.path.exists('recommenders/movie2user.json') or \
+   not os.path.exists('recommenders/usermovie2rating.json') or \
+   not os.path.exists('recommenders/usermovie2rating_test.json'):
    import preprocess2dict
 
 
-with open('user2movie.json', 'rb') as f:
+with open('recommenders/user2movie.json', 'rb') as f:
   user2movie = pickle.load(f)
 
-with open('movie2user.json', 'rb') as f:
+with open('recommenders/movie2user.json', 'rb') as f:
   movie2user = pickle.load(f)
 
-with open('usermovie2rating.json', 'rb') as f:
+with open('recommenders/usermovie2rating.json', 'rb') as f:
   usermovie2rating = pickle.load(f)
 
-with open('usermovie2rating_test.json', 'rb') as f:
+with open('recommenders/usermovie2rating_test.json', 'rb') as f:
   usermovie2rating_test = pickle.load(f)
 
 
@@ -56,7 +57,7 @@ limit = 5 # number of common movies users must have in common in order to consid
 neighbors = [] # store neighbors in this list
 averages = [] # each user's average rating for later use
 deviations = [] # each user's deviation for later use
-for i in range(N):
+for i in tqdm(range(N)):
   # find the 25 closest users to user i
   movies_i = user2movie[i]
   movies_i_set = set(movies_i)
@@ -102,8 +103,8 @@ for i in range(N):
   neighbors.append(sl)
 
   # print out useful things
-  if i % 1 == 0:
-    print(i)
+  # if i % 1 == 0:
+  #   print(i)
 
 
 # using neighbors, calculate train and test MSE
@@ -165,4 +166,18 @@ print('train mse:', mse(train_predictions, train_targets))
 print('test mse:', mse(test_predictions, test_targets))
 
 
-
+'''
+  # Results:
+    # N: 1000, M: 200:
+      train mse: 0.45958597833482406
+      test mse: 0.5926442274497065
+    # N: 2000, M: 400:
+      train mse: 0.5048056182988896
+      test mse: 0.6075760799943644
+    # N: 3000, M: 600:
+      train mse: 0.5199379624693734
+      test mse: 0.6090691698808082
+    # N: 4000, M: 800:
+      train mse: 0.5262817847477094
+      test mse: 0.6098189361192021
+'''
